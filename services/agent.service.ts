@@ -27,7 +27,9 @@ async function callOpenRouter(prompt: string) {
         method: "POST",
         headers: {
           "Authorization": `Bearer ${process.env.OPENROUTER_API_KEY}`,
-          "Content-Type": "application/json"
+          "Content-Type": "application/json",
+          "HTTP-Referer": "https://chronos-seven-mu.vercel.app/",
+          "X-Title": "Chronos Hackathon"
         },
         body: JSON.stringify({
           model: model,
