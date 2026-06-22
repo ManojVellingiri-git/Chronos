@@ -13,8 +13,9 @@ const FALLBACKS = {
 
 async function callOpenRouter(prompt: string) {
   const models = [
-    "meta-llama/llama-3.3-70b-instruct:free",
+    "google/gemma-4-26b-a4b-it:free",
     "google/gemma-2-9b-it:free",
+    "meta-llama/llama-3.3-70b-instruct:free",
     "nvidia/nemotron-3-nano-omni-30b-a3b-reasoning:free",
     "deepseek/deepseek-r1:free",
     "qwen/qwen-2.5-coder-32b-instruct"
