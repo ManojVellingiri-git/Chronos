@@ -1,12 +1,13 @@
 'use client'
 import { motion } from 'framer-motion'
 import { useState } from 'react'
-import { Copy, Check } from 'lucide-react'
+import { Copy, Check, Loader2 } from 'lucide-react'
 
-export function RescueProtocol({ data }: { data: any }) {
+export function RescueProtocol({ data, loading, error }: { data: any, loading: boolean, error?: string }) {
   const [copied, setCopied] = useState(false);
 
   const handleCopy = () => {
+    if (!data) return;
     navigator.clipboard.writeText(`Subject: ${data.subject}\n\n${data.body}`);
     setCopied(true);
     setTimeout(() => setCopied(false), 2000);
@@ -28,21 +29,33 @@ export function RescueProtocol({ data }: { data: any }) {
         </div>
         <button 
           onClick={handleCopy}
-          className="px-4 py-2 bg-red-500/10 text-red-500 rounded-md text-sm hover:bg-red-500/20 transition-colors flex items-center gap-2"
+          disabled={loading || !!error}
+          className="px-4 py-2 bg-red-500/10 text-red-500 rounded-md text-sm hover:bg-red-500/20 transition-colors flex items-center gap-2 disabled:opacity-50"
         >
           {copied ? <Check size={16} /> : <Copy size={16} />}
           {copied ? 'Copied!' : 'Copy to Clipboard'}
         </button>
       </div>
 
-      <div className="p-4 bg-black/50 border border-white/5 rounded-lg font-mono text-sm text-neutral-300">
-        <p className="mb-2"><span className="text-neutral-500">Subject:</span> {data.subject}</p>
-        <p className="whitespace-pre-wrap">{data.body}</p>
-      </div>
-      
-      <div className="mt-4 text-xs text-neutral-500 border-t border-white/5 pt-4">
-        <strong>Next Step:</strong> {data.recovery_action}
-      </div>
+      {loading ? (
+        <div className="flex items-center justify-center py-8 text-red-500 gap-3 font-mono">
+          <Loader2 className="animate-spin" size={20} />
+          [ DRAFTING EXTENSION REQUEST... ]
+        </div>
+      ) : error ? (
+        <div className="text-red-400 text-sm text-center py-4">{error}</div>
+      ) : data ? (
+        <>
+          <div className="p-4 bg-black/50 border border-white/5 rounded-lg font-mono text-sm text-neutral-300">
+            <p className="mb-2"><span className="text-neutral-500">Subject:</span> {data.subject}</p>
+            <p className="whitespace-pre-wrap">{data.body}</p>
+          </div>
+          
+          <div className="mt-4 text-xs text-neutral-500 border-t border-white/5 pt-4">
+            <strong>Next Step:</strong> {data.recovery_action}
+          </div>
+        </>
+      ) : null}
     </motion.div>
   )
 }

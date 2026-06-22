@@ -8,21 +8,29 @@ export function TaskDecomposition() {
   const [loading, setLoading] = useState(false);
   const [steps, setSteps] = useState<any[]>([]);
 
-  const handleDecompose = () => {
-    if (!input.trim()) return;
+  const [error, setError] = useState('');
+
+  const handleDecompose = async () => {
+    if (!input.trim() || loading) return;
     setLoading(true);
     setSteps([]);
-    // Mock Demo Mode response
-    setTimeout(() => {
-      setSteps([
-        { title: "Research company recent news", estimated_minutes: 15, psychological_barrier: "Fear of not knowing enough" },
-        { title: "Outline top 3 stories", estimated_minutes: 10, psychological_barrier: "Perfectionism in writing" },
-        { title: "Practice answers out loud", estimated_minutes: 15, psychological_barrier: "Feeling awkward" },
-        { title: "Do a mock interview", estimated_minutes: 15, psychological_barrier: "Anxiety of evaluation" },
-        { title: "Review notes and sleep", estimated_minutes: 5, psychological_barrier: "Overthinking" },
-      ]);
+    setError('');
+
+    try {
+      const res = await fetch('/api/tasks/adhoc/decompose', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ title: input })
+      });
+      
+      if (!res.ok) throw new Error('Failed to fetch from Agent');
+      const data = await res.json();
+      setSteps(data.subtasks || []);
+    } catch (err) {
+      setError('AI could not decompose this task. Please try again.');
+    } finally {
       setLoading(false);
-    }, 1200);
+    }
   };
 
   return (
@@ -46,6 +54,14 @@ export function TaskDecomposition() {
       </div>
 
       <AnimatePresence>
+        {error && (
+          <motion.div initial={{ opacity: 0 }} animate={{ opacity: 1 }} exit={{ opacity: 0 }} className="text-red-400 text-sm flex items-center gap-2">
+            <span className="w-2 h-2 bg-red-500 rounded-full" /> {error}
+          </motion.div>
+        )}
+      </AnimatePresence>
+
+      <AnimatePresence>
         {steps.length > 0 && (
           <motion.div 
             initial={{ opacity: 0, y: 10 }}
@@ -54,7 +70,7 @@ export function TaskDecomposition() {
           >
             {steps.map((step, idx) => (
               <motion.div 
-                key={idx}
+                key={step.title + idx}
                 initial={{ opacity: 0, x: -10 }}
                 animate={{ opacity: 1, x: 0 }}
                 transition={{ delay: idx * 0.1 }}

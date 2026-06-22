@@ -30,13 +30,17 @@ It acts as an active execution partner, planner, and rescue assistant.
 4. **Task Decomposition**  
    Takes ambiguous, overwhelming tasks (e.g. "Prepare for YC Interview") and instantly breaks them into 3-5 highly specific, actionable micro-steps that take less than 15 minutes each.
 
+## Submission Links
+* **Live Demo:** [Insert Vercel URL Here]
+* **GitHub Repository:** [Insert GitHub URL Here]
+
 ---
 
 ## Tech Stack
 * **Frontend:** Next.js 15 (App Router), React, TailwindCSS, Framer Motion
-* **AI Layer:** Google Gemini (1.5 Flash for speed, 1.5 Pro for drafting)
-* **Backend:** Supabase, PostgreSQL, Next.js Server Actions
-* **Validation:** Zod schemas enforcing strict AI structured outputs
+* **AI Layer:** OpenRouter (Dynamic routing via Llama 3.3 / DeepSeek / Gemma)
+* **Backend:** Next.js API Routes, Supabase (PostgreSQL)
+* **Validation:** Zod schemas & Custom JSON extractors for robust model formatting
 
 ---
 
@@ -45,13 +49,13 @@ It acts as an active execution partner, planner, and rescue assistant.
 ```text
 User
  ↓
-Chronos Dashboard (Next.js)
+Chronos Dashboard (Next.js Client)
  ↓
-AI Orchestrator (Server Actions)
+Next.js API Routes (Server)
  ↓
-Gemini 1.5 Flash/Pro 
+OpenRouter Model Aggregator
  ↓
-Risk Engine (Supabase + Math Algorithms)
+Fallback Resiliency Loop (Llama 3.3 / DeepSeek / Gemma)
  ↓
 Intervention System (Consequence & Rescue UI)
 ```
